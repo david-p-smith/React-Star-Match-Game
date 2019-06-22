@@ -2,19 +2,10 @@ import React, { useState } from "react";
 import ReactDOM from "react-dom";
 import "./style.css";
 import StarsDisplay from "./components/StarsDisplay";
+import PlayNumber from "./components/PlayNumber";
 import utils from "./math-utils";
 
 // STAR MATCH - V3
-
-const PlayNumber = props => (
-  <button
-    className="number"
-    style={{ backgroundColor: colors[props.status] }}
-    onClick={() => props.onClick(props.number, props.status)}
-  >
-    {props.number}
-  </button>
-);
 
 const PlayAgain = props => (
   <div className="game-done">
@@ -132,14 +123,6 @@ const Game = props => {
 const StarMatch = () => {
   const [gameId, setGameId] = useState(1);
   return <Game key={gameId} startNewGame={() => setGameId(gameId + 1)} />;
-};
-
-// Color Theme
-const colors = {
-  available: "lightgray",
-  used: "lightgreen",
-  wrong: "lightcoral",
-  candidate: "deepskyblue"
 };
 
 ReactDOM.render(<StarMatch />, document.getElementById("root"));
