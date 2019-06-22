@@ -1,21 +1,21 @@
-import React, { useState } from 'react';
-import ReactDOM from 'react-dom';
-import './style.css'
+import React, { useState } from "react";
+import ReactDOM from "react-dom";
+import "./style.css";
 
 // STAR MATCH - V3
 
 const StarsDisplay = props => (
-	<>
-    {utils.range(1, props.count).map(starId =>
+  <>
+    {utils.range(1, props.count).map(starId => (
       <div key={starId} className="star" />
-    )}
+    ))}
   </>
 );
 
 const PlayNumber = props => (
-	<button 
-    className="number" 
-    style={{ backgroundColor: colors[props.status]}}
+  <button
+    className="number"
+    style={{ backgroundColor: colors[props.status] }}
     onClick={() => props.onClick(props.number, props.status)}
   >
     {props.number}
@@ -24,11 +24,11 @@ const PlayNumber = props => (
 
 const PlayAgain = props => (
   <div className="game-done">
-    <div 
-    className="message"
-    style={{color: props.gameStatus === 'lost' ? 'red' : 'green'}}
+    <div
+      className="message"
+      style={{ color: props.gameStatus === "lost" ? "red" : "green" }}
     >
-      {props.gameStatus === 'lost' ? 'Game Over' : 'Nice'}
+      {props.gameStatus === "lost" ? "Game Over" : "Nice"}
     </div>
     <button onClick={props.onClick}>Play Again</button>
   </div>
@@ -36,27 +36,23 @@ const PlayAgain = props => (
 
 //Custom Hook
 const useGameState = () => {
-
   const [stars, setStars] = useState(utils.random(1, 9));
-  const [availableNums, setAvailableNums] = useState(utils.range(1,9));
+  const [availableNums, setAvailableNums] = useState(utils.range(1, 9));
   const [candidateNums, setCandidateNums] = useState([]);
   const [secondsLeft, setSecondsLeft] = useState(10);
 
   React.useEffect(() => {
-    if(secondsLeft > 0 && availableNums.length > 0){
-
+    if (secondsLeft > 0 && availableNums.length > 0) {
       const timerId = setTimeout(() => {
         setSecondsLeft(secondsLeft - 1);
       }, 1000);
 
       return () => clearTimeout(timerId);
-    
     }
-
   });
 
-  const setGameState = (newCandidateNums) => {
-    if(utils.sum(newCandidateNums) !== stars){
+  const setGameState = newCandidateNums => {
+    if (utils.sum(newCandidateNums) !== stars) {
       setCandidateNums(newCandidateNums);
     } else {
       const newAvailableNums = availableNums.filter(
@@ -68,52 +64,48 @@ const useGameState = () => {
     }
   };
 
-  return{ stars, availableNums, candidateNums, secondsLeft, setGameState };
+  return { stars, availableNums, candidateNums, secondsLeft, setGameState };
 };
 
 const Game = props => {
-  
   const {
     stars,
     availableNums,
     candidateNums,
     secondsLeft,
     setGameState
-  }
-  = useGameState();
+  } = useGameState();
 
   const candidatesAreWrong = utils.sum(candidateNums) > stars;
 
-  const gameStatus = availableNums.length === 0
-  ? 'won' 
-  : secondsLeft === 0 ? 'lost' : 'active';
-  
-  const numberStatus = (number) => {
-    if(!availableNums.includes(number)){
-      return 'used';
+  const gameStatus =
+    availableNums.length === 0 ? "won" : secondsLeft === 0 ? "lost" : "active";
+
+  const numberStatus = number => {
+    if (!availableNums.includes(number)) {
+      return "used";
     }
-    if(candidateNums.includes(number)){
-      return candidatesAreWrong ? 'wrong' : 'candidate';
+    if (candidateNums.includes(number)) {
+      return candidatesAreWrong ? "wrong" : "candidate";
     }
-    
-    return 'available';
+
+    return "available";
   };
 
   const onNumberClick = (number, currentStatus) => {
-    if(gameStatus !== 'active' || currentStatus === 'used'){
+    if (gameStatus !== "active" || currentStatus === "used") {
       return;
     }
 
     //candidateNums
-    const newCandidateNums = 
-      currentStatus === 'available'
-      ? candidateNums.concat(number)
-      : candidateNums.filter(cn => cn !== number);
+    const newCandidateNums =
+      currentStatus === "available"
+        ? candidateNums.concat(number)
+        : candidateNums.filter(cn => cn !== number);
 
-      setGameState(newCandidateNums);
-
+    setGameState(newCandidateNums);
   };
-  
+
   return (
     <div className="game">
       <div className="help">
@@ -121,22 +113,21 @@ const Game = props => {
       </div>
       <div className="body">
         <div className="left">
-          {gameStatus !== 'active' ? (
+          {gameStatus !== "active" ? (
             <PlayAgain onClick={props.startNewGame} gameStatus={gameStatus} />
           ) : (
             <StarsDisplay count={stars} />
           )}
-					
         </div>
         <div className="right">
-        	{utils.range(1, 9).map(number =>
-          	<PlayNumber 
-              key={number} 
+          {utils.range(1, 9).map(number => (
+            <PlayNumber
+              key={number}
               status={numberStatus(number)}
               number={number}
               onClick={onNumberClick}
             />
-          )}
+          ))}
         </div>
       </div>
       <div className="timer">Time Remaining: {secondsLeft}</div>
@@ -146,15 +137,15 @@ const Game = props => {
 
 const StarMatch = () => {
   const [gameId, setGameId] = useState(1);
-  return <Game key={gameId} startNewGame={() => setGameId(gameId+1)}/>;
-}
+  return <Game key={gameId} startNewGame={() => setGameId(gameId + 1)} />;
+};
 
 // Color Theme
 const colors = {
-  available: 'lightgray',
-  used: 'lightgreen',
-  wrong: 'lightcoral',
-  candidate: 'deepskyblue',
+  available: "lightgray",
+  used: "lightgreen",
+  wrong: "lightcoral",
+  candidate: "deepskyblue"
 };
 
 // Math science
@@ -184,7 +175,7 @@ const utils = {
       }
     }
     return sums[utils.random(0, sums.length)];
-  },
+  }
 };
 
-ReactDOM.render(<StarMatch />, document.getElementById('root'),);
+ReactDOM.render(<StarMatch />, document.getElementById("root"));
