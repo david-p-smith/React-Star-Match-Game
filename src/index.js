@@ -39,6 +39,10 @@ const StarMatch = () => {
     
     return 'available';
   };
+
+  const onNumberClick = () => {
+    // currentStatus => newStatus
+  }
   
   return (
     <div className="game">
