@@ -3,21 +3,10 @@ import ReactDOM from "react-dom";
 import "./style.css";
 import StarsDisplay from "./components/StarsDisplay";
 import PlayNumber from "./components/PlayNumber";
+import PlayAgain from "./components/PlayAgain";
 import utils from "./math-utils";
 
 // STAR MATCH - V3
-
-const PlayAgain = props => (
-  <div className="game-done">
-    <div
-      className="message"
-      style={{ color: props.gameStatus === "lost" ? "red" : "green" }}
-    >
-      {props.gameStatus === "lost" ? "Game Over" : "Nice"}
-    </div>
-    <button onClick={props.onClick}>Play Again</button>
-  </div>
-);
 
 //Custom Hook
 const useGameState = () => {
