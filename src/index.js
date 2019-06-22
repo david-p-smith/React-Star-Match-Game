@@ -83,7 +83,7 @@ const StarMatch = () => {
             <PlayAgain />
           ) : (
             <StarsDisplay count={stars} />
-          )};
+          )}
 					
         </div>
         <div className="right">
